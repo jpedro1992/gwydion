@@ -1,0 +1,205 @@
+# SOURCE: https://cloud.google.com/kubernetes-engine/docs/tutorials/guestbook
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: redis
+  labels:
+    name: redis
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-follower
+  namespace: redis
+  labels:
+    app: redis-follower
+    role: follower
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-follower
+  template:
+    metadata:
+      labels:
+        app: redis-follower
+        role: follower
+        tier: backend
+        #app-group.scheduling.sigs.k8s.io: redis-cluster
+    spec:
+      #schedulerName: network-aware-scheduler
+      containers:
+      - name: follower
+        image: gcr.io/google_samples/gb-redis-follower:v2
+        resources:
+          requests:
+            cpu: 250m
+            memory: 500Mi
+          limits:
+              cpu: 250m
+              memory: 500Mi
+        ports:
+        - containerPort: 6379
+---
+# SOURCE: https://cloud.google.com/kubernetes-engine/docs/tutorials/guestbook
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-follower
+  namespace: redis
+  labels:
+    app: redis-follower
+    role: follower
+    tier: backend
+spec:
+  ports:
+    # the port that this service should serve on
+  - port: 6379
+  selector:
+    app: redis-follower
+    role: follower
+    tier: backend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: estimator-follower
+spec:
+  selector:
+    matchLabels:
+      app: estimator-follower
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: estimator-follower
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      containers:
+      - name: main
+        image: jpedro1992/deployment_estimator:latest
+        imagePullPolicy: IfNotPresent # To avoid pulling the image if already present
+        ports:
+          - containerPort: 8089
+          - containerPort: 5557
+        env: # env variables
+        - name: PROMETHEUS_URL
+          value: "http://prom-kube-prometheus-stack-prometheus:9090"
+        - name: DEPLOYMENT_NAME
+          value: "redis-follower"
+        - name: DEPLOYMENT_NAMESPACE
+          value: "redis"
+        - name: FREQ
+          value: "15"
+        - name: FORECAST
+          value: True
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-leader
+  namespace: redis
+  labels:
+    app: redis-leader
+    role: leader
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-leader
+  template:
+    metadata:
+      labels:
+        app: redis-leader
+        role: leader
+        tier: backend
+        #app-group.scheduling.sigs.k8s.io: redis-cluster
+    spec:
+      #schedulerName: network-aware-scheduler
+      containers:
+      - name: leader
+        image: "docker.io/redis:6.0.5"
+        resources:
+          requests:
+            cpu: 250m
+            memory: 500Mi
+          limits:
+            cpu: 250m
+            memory: 500Mi
+        ports:
+        - containerPort: 6379
+---
+# SOURCE: https://cloud.google.com/kubernetes-engine/docs/tutorials/guestbook
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-leader
+  namespace: redis
+  labels:
+    app: redis-leader
+    role: leader
+    tier: backend
+spec:
+  ports:
+  - port: 6379
+    targetPort: 6379
+  selector:
+    app: redis-leader
+    role: leader
+    tier: backend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: estimator-leader
+spec:
+  selector:
+    matchLabels:
+      app: estimator-leader
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: estimator-leader
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      containers:
+      - name: main
+        image: jpedro1992/deployment_estimator:latest
+        imagePullPolicy: IfNotPresent # To avoid pulling the image if already present
+        ports:
+          - containerPort: 8089
+          - containerPort: 5557
+        env: # env variables
+        - name: PROMETHEUS_URL
+          value: "http://prom-kube-prometheus-stack-prometheus:9090"
+        - name: DEPLOYMENT_NAME
+          value: "redis-leader"
+        - name: DEPLOYMENT_NAMESPACE
+          value: "redis"
+        - name: FREQ
+          value: "15"
+        - name: FORECAST
+          value: True
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+---
+

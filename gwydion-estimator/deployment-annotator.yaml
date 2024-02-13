@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment_estimator
+spec:
+  selector:
+    matchLabels:
+      app: deployment_estimator
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: deployment_estimator
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      containers:
+      - name: main
+        image: jpedro1992/deployment_estimator:latest
+        imagePullPolicy: IfNotPresent # To avoid pulling the image if already present
+        ports:
+          - containerPort: 8089
+          - containerPort: 5557
+        env: # env variables
+        - name: PROMETHEUS_URL
+          value: "http://prom-kube-prometheus-stack-prometheus:9090"
+        - name: DEPLOYMENT_NAME
+          value: "test"
+        - name: DEPLOYMENT_NAMESPACE
+          value: "default"
+        - name: FREQ
+          value: "15"
+        - name: FORECAST
+          value: True
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+---

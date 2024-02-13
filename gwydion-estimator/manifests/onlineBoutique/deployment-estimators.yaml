@@ -1,0 +1,476 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: estimator-recommendationservice
+spec:
+  selector:
+    matchLabels:
+      app: estimator-recommendationservice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: estimator-recommendationservice
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      containers:
+      - name: main
+        image: jpedro1992/deployment_estimator:latest
+        imagePullPolicy: IfNotPresent # To avoid pulling the image if already present
+        ports:
+          - containerPort: 8089
+          - containerPort: 5557
+        env: # env variables
+        - name: PROMETHEUS_URL
+          value: "http://prom-kube-prometheus-stack-prometheus:9090"
+        - name: DEPLOYMENT_NAME
+          value: "recommendationservice"
+        - name: DEPLOYMENT_NAMESPACE
+          value: "default"
+        - name: FREQ
+          value: "15"
+        - name: FORECAST
+          value: True
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: estimator-productcatalogservice
+
+spec:
+  selector:
+    matchLabels:
+      app: estimator-productcatalogservice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: estimator-productcatalogservice
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      containers:
+      - name: main
+        image: jpedro1992/deployment_estimator:latest
+        imagePullPolicy: IfNotPresent # To avoid pulling the image if already present
+        ports:
+          - containerPort: 8089
+          - containerPort: 5557
+        env: # env variables
+        - name: PROMETHEUS_URL
+          value: "http://prom-kube-prometheus-stack-prometheus:9090"
+        - name: DEPLOYMENT_NAME
+          value: "productcatalogservice"
+        - name: DEPLOYMENT_NAMESPACE
+          value: "default"
+        - name: FREQ
+          value: "15"
+        - name: FORECAST
+          value: True
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: estimator-cartservice
+
+spec:
+  selector:
+    matchLabels:
+      app: estimator-cartservice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: estimator-cartservice
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      containers:
+      - name: main
+        image: jpedro1992/deployment_estimator:latest
+        imagePullPolicy: IfNotPresent # To avoid pulling the image if already present
+        ports:
+          - containerPort: 8089
+          - containerPort: 5557
+        env: # env variables
+        - name: PROMETHEUS_URL
+          value: "http://prom-kube-prometheus-stack-prometheus:9090"
+        - name: DEPLOYMENT_NAME
+          value: "cartservice"
+        - name: DEPLOYMENT_NAMESPACE
+          value: "default"
+        - name: FREQ
+          value: "15"
+        - name: FORECAST
+          value: True
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: estimator-adservice
+spec:
+  selector:
+    matchLabels:
+      app: estimator-adservice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: estimator-adservice
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      containers:
+      - name: main
+        image: jpedro1992/deployment_estimator:latest
+        imagePullPolicy: IfNotPresent # To avoid pulling the image if already present
+        ports:
+          - containerPort: 8089
+          - containerPort: 5557
+        env: # env variables
+        - name: PROMETHEUS_URL
+          value: "http://prom-kube-prometheus-stack-prometheus:9090"
+        - name: DEPLOYMENT_NAME
+          value: "adservice"
+        - name: DEPLOYMENT_NAMESPACE
+          value: "default"
+        - name: FREQ
+          value: "15"
+        - name: FORECAST
+          value: True
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: estimator-paymentservice
+spec:
+  selector:
+    matchLabels:
+      app: estimator-paymentservice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: estimator-paymentservice
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      containers:
+      - name: main
+        image: jpedro1992/deployment_estimator:latest
+        imagePullPolicy: IfNotPresent # To avoid pulling the image if already present
+        ports:
+          - containerPort: 8089
+          - containerPort: 5557
+        env: # env variables
+        - name: PROMETHEUS_URL
+          value: "http://prom-kube-prometheus-stack-prometheus:9090"
+        - name: DEPLOYMENT_NAME
+          value: "paymentservice"
+        - name: DEPLOYMENT_NAMESPACE
+          value: "default"
+        - name: FREQ
+          value: "15"
+        - name: FORECAST
+          value: True
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: estimator-shippingservice
+spec:
+  selector:
+    matchLabels:
+      app: estimator-shippingservice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: estimator-shippingservice
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      containers:
+      - name: main
+        image: jpedro1992/deployment_estimator:latest
+        imagePullPolicy: IfNotPresent # To avoid pulling the image if already present
+        ports:
+          - containerPort: 8089
+          - containerPort: 5557
+        env: # env variables
+        - name: PROMETHEUS_URL
+          value: "http://prom-kube-prometheus-stack-prometheus:9090"
+        - name: DEPLOYMENT_NAME
+          value: "shippingservice"
+        - name: DEPLOYMENT_NAMESPACE
+          value: "default"
+        - name: FREQ
+          value: "15"
+        - name: FORECAST
+          value: True
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: estimator-currencyservice
+spec:
+  selector:
+    matchLabels:
+      app: estimator-currencyservice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: estimator-currencyservice
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      containers:
+      - name: main
+        image: jpedro1992/deployment_estimator:latest
+        imagePullPolicy: IfNotPresent # To avoid pulling the image if already present
+        ports:
+          - containerPort: 8089
+          - containerPort: 5557
+        env: # env variables
+        - name: PROMETHEUS_URL
+          value: "http://prom-kube-prometheus-stack-prometheus:9090"
+        - name: DEPLOYMENT_NAME
+          value: "currencyservice"
+        - name: DEPLOYMENT_NAMESPACE
+          value: "default"
+        - name: FREQ
+          value: "15"
+        - name: FORECAST
+          value: True
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: estimator-redis-cart
+spec:
+  selector:
+    matchLabels:
+      app: estimator-redis-cart
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: estimator-redis-cart
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      containers:
+      - name: main
+        image: jpedro1992/deployment_estimator:latest
+        imagePullPolicy: IfNotPresent # To avoid pulling the image if already present
+        ports:
+          - containerPort: 8089
+          - containerPort: 5557
+        env: # env variables
+        - name: PROMETHEUS_URL
+          value: "http://prom-kube-prometheus-stack-prometheus:9090"
+        - name: DEPLOYMENT_NAME
+          value: "redis-cart"
+        - name: DEPLOYMENT_NAMESPACE
+          value: "default"
+        - name: FREQ
+          value: "15"
+        - name: FORECAST
+          value: True
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: estimator-checkoutservice
+spec:
+  selector:
+    matchLabels:
+      app: estimator-checkoutservice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: estimator-checkoutservice
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      containers:
+      - name: main
+        image: jpedro1992/deployment_estimator:latest
+        imagePullPolicy: IfNotPresent # To avoid pulling the image if already present
+        ports:
+          - containerPort: 8089
+          - containerPort: 5557
+        env: # env variables
+        - name: PROMETHEUS_URL
+          value: "http://prom-kube-prometheus-stack-prometheus:9090"
+        - name: DEPLOYMENT_NAME
+          value: "checkoutservice"
+        - name: DEPLOYMENT_NAMESPACE
+          value: "onlineboutique"
+        - name: FREQ
+          value: "15"
+        - name: FORECAST
+          value: True
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: estimator-frontend
+spec:
+  selector:
+    matchLabels:
+      app: estimator-frontend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: estimator-frontend
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      containers:
+      - name: main
+        image: jpedro1992/deployment_estimator:latest
+        imagePullPolicy: IfNotPresent # To avoid pulling the image if already present
+        ports:
+          - containerPort: 8089
+          - containerPort: 5557
+        env: # env variables
+        - name: PROMETHEUS_URL
+          value: "http://prom-kube-prometheus-stack-prometheus:9090"
+        - name: DEPLOYMENT_NAME
+          value: "frontend"
+        - name: DEPLOYMENT_NAMESPACE
+          value: "default"
+        - name: FREQ
+          value: "15"
+        - name: FORECAST
+          value: True
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: estimator-emailservice
+spec:
+  selector:
+    matchLabels:
+      app: estimator-emailservice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: estimator-emailservice
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      containers:
+      - name: main
+        image: jpedro1992/deployment_estimator:latest
+        imagePullPolicy: IfNotPresent # To avoid pulling the image if already present
+        ports:
+          - containerPort: 8089
+          - containerPort: 5557
+        env: # env variables
+        - name: PROMETHEUS_URL
+          value: "http://prom-kube-prometheus-stack-prometheus:9090"
+        - name: DEPLOYMENT_NAME
+          value: "emailservice"
+        - name: DEPLOYMENT_NAMESPACE
+          value: "default"
+        - name: FREQ
+          value: "15"
+        - name: FORECAST
+          value: True
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+---
